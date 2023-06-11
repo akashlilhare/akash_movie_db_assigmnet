@@ -1,4 +1,5 @@
-# movie_app
+
+# Movie App
 
 1. User Login Page with Complete Form Validation:
     - Create a new Flutter project or open an existing one.
@@ -21,4 +22,13 @@
     - Write a method to handle the device token retrieval. This token will be used to send push notifications to the device.
     - Implement the logic to handle push notifications by listening to Firebase's messaging stream. You can handle different types of notifications based on your application's requirements.
     - Use the obtained device token to send push notifications using Firebase Cloud Messaging (FCM). You can trigger push notifications from the server-side or manually send notifications from the Firebase console.
+
+# Screen Shorts
+![SS1](https://github.com/akashlilhare/akash_movie_db_assigmnet/blob/master/screen_short/img1.jpeg?raw=true)
+
+![SS2](https://github.com/akashlilhare/akash_movie_db_assigmnet/blob/master/screen_short/img2.jpeg?raw=true)
+
+![SS3](https://github.com/akashlilhare/akash_movie_db_assigmnet/blob/master/screen_short/img3.jpeg?raw=true)
+
+![SS4](https://github.com/akashlilhare/akash_movie_db_assigmnet/blob/master/screen_short/img4.jpeg?raw=true)
 
