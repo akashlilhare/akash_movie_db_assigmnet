@@ -1,10 +1,10 @@
-
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_phoenix/flutter_phoenix.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
+import 'package:http/http.dart' as http;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -21,13 +21,14 @@ class AuthProvider with ChangeNotifier {
 
   bool dataSyncing = false;
   bool authLoading = false;
+  bool sendingNotification = false;
 
-
-  navigateToNextPage({required BuildContext context}){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context){
+  navigateToNextPage({required BuildContext context}) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
       return MainPage();
     }));
   }
+
   Future googleLogin({required BuildContext context}) async {
     connectionStatus = AppConnectionStatus.loading;
     notifyListeners();
@@ -96,7 +97,7 @@ class AuthProvider with ChangeNotifier {
         email: email,
         password: password,
       );
-       navigateToNextPage(context: context);
+      navigateToNextPage(context: context);
       await SpHelper().saveBool(SpKey().authByGoogle, false);
       _constants.getToast("User Login Successfully");
     } on FirebaseAuthException catch (e) {
@@ -130,8 +131,6 @@ class AuthProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-
-
 
   Future logout({required BuildContext context}) async {
     authLoading = true;

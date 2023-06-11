@@ -1,18 +1,14 @@
-import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:movie_app/enums/app_conection_status.dart';
-import 'package:movie_app/model/movie_model.dart';
-import 'package:movie_app/pages/main_page/booking_page.dart';
 import 'package:movie_app/pages/main_page/search_page.dart';
 import 'package:movie_app/provider/auth_provider.dart';
 import 'package:movie_app/provider/movie_provider.dart';
-import 'package:search_page/search_page.dart' as search;
 
 import 'package:provider/provider.dart';
 
-import 'movie_detail_page.dart';
+import '../../widget/movid_card.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({Key? key}) : super(key: key);
@@ -46,9 +42,16 @@ class _MainPageState extends State<MainPage> {
                       context: context,
                       builder: (builder) {
                         return AlertDialog(
-                          title: Text("Logout",style: TextStyle(color: Colors.white),),
+                          title: Text(
+                            "Logout",
+                            style: TextStyle(color: Colors.white),
+                          ),
                           backgroundColor: Colors.grey.shade900,
-                          content: Text("Do you want ot logout",style: TextStyle(color: Colors.white.withOpacity(.8)),),
+                          content: Text(
+                            "Do you want ot logout",
+                            style:
+                                TextStyle(color: Colors.white.withOpacity(.8)),
+                          ),
                           actions: [
                             TextButton(
                                 onPressed: () {
@@ -89,14 +92,50 @@ class _MainPageState extends State<MainPage> {
                   icon: Icon(Icons.search))
             ],
           ),
-          body: ListView.builder(
-              padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
-              itemCount: provider.movieModel!.results.length,
-              itemBuilder: (context, index) {
-                return MovieCard(
-                  results: provider.movieModel!.results[index],
-                );
-              }),
+          body: Column(
+            children: [
+              Container(
+                  padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  color: Colors.grey.shade900,
+                  child: Row(
+                    children: [
+                      Text(
+                        "New movie relies on this friday",
+                        style: TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.bold),
+                      ),
+                      Spacer(),
+                      ElevatedButton(
+                          onPressed: () {
+                            provider.sendNotification(
+                              "Movie DB",
+                              "You will be notified soon 👀",
+                            );
+                          },
+                          child: provider.sendingNotification
+                              ? Container(
+                                  height: 20,
+                                  width: 20,
+                                  margin: EdgeInsets.symmetric(horizontal: 20),
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black.withOpacity(.8),
+                                    strokeWidth: 2,
+                                  ))
+                              : Text("Notify me"))
+                    ],
+                  )),
+              Expanded(
+                child: ListView.builder(
+                    padding: EdgeInsets.symmetric(vertical: 18, horizontal: 12),
+                    itemCount: provider.movieModel!.results.length,
+                    itemBuilder: (context, index) {
+                      return MovieCard(
+                        results: provider.movieModel!.results[index],
+                      );
+                    }),
+              ),
+            ],
+          ),
         );
       } else {
         return Center(
@@ -104,97 +143,5 @@ class _MainPageState extends State<MainPage> {
         );
       }
     });
-  }
-}
-
-class MovieSearchDelegate extends SearchDelegate {
-  @override
-  List<Widget>? buildActions(BuildContext context) {
-    return [IconButton(onPressed: () {}, icon: Icon(Icons.close))];
-  }
-
-  @override
-  Widget? buildLeading(BuildContext context) {
-    return IconButton(
-        onPressed: () {
-          close(context, null);
-        },
-        icon: Icon(Icons.arrow_back));
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Container();
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
-  }
-}
-
-class MovieCard extends StatelessWidget {
-  final Results results;
-
-  const MovieCard({Key? key, required this.results}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-        padding: const EdgeInsets.only(bottom: 18.0),
-        child: InkWell(
-          onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (builder) {
-              return MovieDetailPage(
-                movieId: results.id,
-              );
-            }));
-          },
-          child: Container(
-            height: 350,
-            child: Column(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(18)),
-                  child: Image.network(
-                      "https://image.tmdb.org/t/p/w500/${results.backdropPath}"),
-                ),
-                Expanded(
-                    child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      results.title,
-                      style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w700),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      results.overview,
-                      style: TextStyle(color: Colors.white70),
-                      maxLines: 3,
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Text(
-                      "Released on: " + results.releaseDate.toString(),
-                      style: TextStyle(
-                          color: Colors.amber, fontWeight: FontWeight.w500),
-                    ),
-                  ],
-                ))
-              ],
-            ),
-          ),
-        ));
   }
 }

@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:movie_app/constants/constant.dart';
@@ -20,6 +21,9 @@ class MovieProvider with ChangeNotifier {
   MovieDetailModel? movieDetailModel;
   List<MovieSuggestionModel> movieList = [];
   bool showLocalList = true;
+  bool sendingNotification = false;
+  final Constants _constants = Constants();
+
 
   getMovieList({required BuildContext context, int? pageIdx}) async {
     try {
@@ -156,5 +160,30 @@ class MovieProvider with ChangeNotifier {
 
   saveResultToLocal({required MovieSuggestionModel searchItem}){
     SharedPreferencesHelper().saveData(searchItem);
+  }
+
+  sendNotification(
+      final String title, final String message) async {
+    try {
+      sendingNotification = true;
+      notifyListeners();
+      final fcmToken = await FirebaseMessaging.instance.getToken();
+      var postBody = {"title": title, "message": message, "deviceToken": fcmToken};
+      var response = await http.post(
+        Uri.parse("https://node-push-notification.vercel.app/send-notification"),
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: jsonEncode(postBody),
+      );
+      sendingNotification = false;
+      notifyListeners();
+      _constants.getToast("Request submitted successfully");
+      print(response.body);
+    } catch (e) {
+      _constants.getToast("Something went wrong");
+      sendingNotification = false;
+      notifyListeners();
+    }
   }
 }

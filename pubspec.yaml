@@ -48,9 +48,8 @@ dependencies:
   cloud_firestore: ^4.8.0
   easy_search_bar: ^2.5.0
   search_page: ^2.3.0
-
-
-
+  firebase_messaging: ^14.6.2
+  flutter_local_notifications: ^14.1.1
 
 dev_dependencies:
   flutter_test:
