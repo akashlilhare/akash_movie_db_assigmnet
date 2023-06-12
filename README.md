@@ -2,7 +2,7 @@
 # Movie App
 
 1. User Login Page with Complete Form Validation:
-    - Create a new Flutter project or open an existing one.
+
     - Create a login screen widget with necessary UI elements such as text fields for email and password, a login button, and error message placeholders.
     - Implement form validation by adding validation logic to the email and password fields. Use regular expressions or predefined validation methods to ensure proper email and password formats.
     - Display error messages dynamically based on validation results.
